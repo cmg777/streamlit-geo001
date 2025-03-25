@@ -69,7 +69,7 @@ def load_data_dictionary() -> Dict[str, str]:
 # 📌 create_map:
 #    - Creates and displays a choropleth map with the provided data.
 def create_map(data, variable_labels, color_column, numeric_columns, selected_regions=None,
-               color_scale="Viridis", map_style="carto-positron", zoom=7.0, opacity=0.7, midpoint=None):
+               color_scale="Viridis", map_style="carto-positron", zoom=5.0, opacity=0.7, midpoint=None):
     """Creates and displays a choropleth map of the data."""
     try:
         # Prepare geojson data for mapping
@@ -84,6 +84,11 @@ def create_map(data, variable_labels, color_column, numeric_columns, selected_re
             hover_cols.append('is_selected')
             labels['is_selected'] = 'Selected Region'
             
+        # Calculate center more accurately by taking the mean of bounding box
+        bounds = data.total_bounds  # returns (minx, miny, maxx, maxy)
+        center_lon = (bounds[0] + bounds[2]) / 2
+        center_lat = (bounds[1] + bounds[3]) / 2
+        
         # Create the choropleth map using Plotly
         fig = px.choropleth_mapbox(
             data_frame=data,
@@ -95,7 +100,7 @@ def create_map(data, variable_labels, color_column, numeric_columns, selected_re
             color_continuous_scale=color_scale,
             mapbox_style=map_style,
             zoom=zoom,
-            center={"lat": data.geometry.centroid.y.mean(), "lon": data.geometry.centroid.x.mean()},
+            center={"lat": center_lat, "lon": center_lon},
             opacity=opacity,
             labels=labels,
             color_continuous_midpoint=midpoint
@@ -146,10 +151,18 @@ def main():
     numeric_columns = data.select_dtypes(include=['float64', 'int64']).columns.tolist()
     
     # Color variable selection
+    # Set default to "imds" if it exists in the columns (case insensitive)
+    default_index = 0
+    # Check for both "imds" and "IMDS" in columns
+    for col_name in ["imds", "IMDS", "Imds"]:
+        if col_name in numeric_columns:
+            default_index = numeric_columns.index(col_name)
+            break
+    
     color_column = st.sidebar.selectbox(
         "Select variable to display:", 
         options=numeric_columns,
-        index=0 if numeric_columns else None
+        index=default_index if numeric_columns else None
     )
     
     if not color_column:
@@ -174,7 +187,7 @@ def main():
     opacity = st.sidebar.slider("Map opacity:", min_value=0.1, max_value=1.0, value=0.7, step=0.1)
     
     # Map zoom
-    zoom = st.sidebar.slider("Map zoom:", min_value=5.0, max_value=12.0, value=7.0, step=0.5)
+    zoom = st.sidebar.slider("Map zoom:", min_value=4.0, max_value=12.0, value=5.0, step=0.5)
     
     # Map height
     st.session_state.map_height = st.sidebar.slider("Map height (px):", min_value=400, max_value=1000, value=st.session_state.map_height, step=50)
@@ -190,8 +203,9 @@ def main():
     if color_column in data.columns:
         midpoint = (data[color_column].max() + data[color_column].min()) / 2
     
-    # Create map
-    st.subheader(f"Map of {variable_labels.get(color_column, color_column)}")
+    # Create map with proper variable name display
+    variable_display_name = variable_labels.get(color_column, color_column)
+    st.subheader(f"Map of {variable_display_name}")
     create_map(
         data=data,
         variable_labels=variable_labels,
