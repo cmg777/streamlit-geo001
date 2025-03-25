@@ -40,7 +40,7 @@ def load_labels(path):
 # --- Main App ---
 st.title("Geographic Data Visualization")
 
-data = load_geo_data(DATA_PATH)
+data   = load_geo_data(DATA_PATH)
 labels = load_labels(DEFINITIONS_PATH)
 
 numeric_cols = data.select_dtypes(include=['number']).columns.tolist()
@@ -73,7 +73,7 @@ fig = px.choropleth_mapbox(
     hover_name="mun", # Assumes 'mun' column exists
     color_continuous_scale="Viridis",
     mapbox_style="carto-positron",
-    zoom=5.0,
+    zoom=4.5,
     center=center,
     opacity=0.7,
     labels={selected_col: selected_label} # Nicer label in legend/tooltip
