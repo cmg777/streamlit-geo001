@@ -36,5 +36,5 @@ markdown = """
 st.markdown(markdown)
 
 m = leafmap.Map(minimap_control=True)
-m.add_basemap("CartoDB.DarkMatter")
+m.add_basemap("NASAGIBS.ViirsEarthAtNight2012")
 m.to_streamlit(height=500)
