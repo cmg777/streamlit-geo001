@@ -26,7 +26,13 @@ with col2:
 with col1:
 
     m = leafmap.Map(
-        locate_control=True, latlon_control=True, draw_export=True, minimap_control=True
+    center=[-16.2902, -63.5887],  # Latitude and longitude of Bolivia's approximate center
+    zoom=6,  # Adjust the zoom level as needed (higher number means closer zoom)
+    locate_control=True,
+    latlon_control=True,
+    draw_export=True,
+    minimap_control=True,
     )
+
     m.add_basemap(basemap)
     m.to_streamlit(height=700)
