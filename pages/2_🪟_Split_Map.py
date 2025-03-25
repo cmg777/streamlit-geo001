@@ -17,7 +17,7 @@ st.title("Split-panel Map")
 
 with st.expander("See source code"):
     with st.echo():
-        m = leafmap.Map(center=[52.5, 7.5], zoom=4)
+        m = leafmap.Map(center=[-16.2902, -63.5887], zoom=6)
         m.split_map(
             left_layer="NASAGIBS.ViirsEarthAtNight2012",
             right_layer="ESA WorldCover 2020",
