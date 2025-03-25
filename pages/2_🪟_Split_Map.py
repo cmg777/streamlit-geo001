@@ -20,7 +20,7 @@ url2 = "https://github.com/quarcs-lab/datasets/releases/download/DMSP-like/Harmo
 
 with st.expander("See source code"):
     with st.echo():
-        m = leafmap.Map()
+        m = leafmap.Map(center=[54.5260, 15.2551], zoom=4)
         m.split_map(
             left_layer="NASAGIBS.ViirsEarthAtNight2012", right_layer="ESA WorldCover 2020"
         )
