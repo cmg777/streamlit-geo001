@@ -15,13 +15,17 @@ st.sidebar.image(logo)
 
 st.title("Split-panel Map")
 
-
 with st.expander("See source code"):
     with st.echo():
-        m = leafmap.Map(center=[52.5, 7.5], zoom=4) 
+        m = leafmap.Map()
         m.split_map(
-            left_layer="NASAGIBS.ViirsEarthAtNight2012", right_layer="ESA WorldCover 2020"
+            left_layer="NASAGIBS.ViirsEarthAtNight2012",
+            right_layer="ESA WorldCover 2020",
+            left_label="2012",
+            right_label="2020",
+            label_position="bottom",
+            center=[52.5, 7.5],
+            zoom=4,
         )
         m.add_legend(title="ESA Land Cover", builtin_legend="ESA_WorldCover")
-
 m.to_streamlit(height=700)
