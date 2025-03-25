@@ -150,20 +150,32 @@ def main():
     # Get numeric columns
     numeric_columns = data.select_dtypes(include=['float64', 'int64']).columns.tolist()
     
-    # Color variable selection
-    # Set default to "imds" if it exists in the columns (case insensitive)
+    # Create list of (column, label) tuples for the dropdown
+    variable_options = [(col, variable_labels.get(col, col)) for col in numeric_columns]
+    
+    # Sort alphabetically by label for better usability
+    variable_options.sort(key=lambda x: x[1])
+    
+    # Find default index for imds (case insensitive)
     default_index = 0
-    # Check for both "imds" and "IMDS" in columns
-    for col_name in ["imds", "IMDS", "Imds"]:
-        if col_name in numeric_columns:
-            default_index = numeric_columns.index(col_name)
+    for i, (col, _) in enumerate(variable_options):
+        if col.lower() == "imds":
+            default_index = i
             break
     
-    color_column = st.sidebar.selectbox(
+    # Create format options for display (using only labels)
+    format_options = [label for _, label in variable_options]
+    
+    # Display dropdown with labels
+    selected_index = st.sidebar.selectbox(
         "Select variable to display:", 
-        options=numeric_columns,
-        index=default_index if numeric_columns else None
+        options=range(len(format_options)),
+        format_func=lambda i: format_options[i],
+        index=default_index if variable_options else 0
     )
+    
+    # Get the corresponding column name from the selected index
+    color_column = variable_options[selected_index][0]
     
     if not color_column:
         st.warning("No numeric columns found in the data.")
