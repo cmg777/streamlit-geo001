@@ -25,7 +25,7 @@ with st.expander("See source code"):
             right_label="2020",
             label_position="bottom",
             center=[52.5, 7.5],
-            zoom=4,
+            zoom=4
         )
         m.add_legend(title="ESA Land Cover", builtin_legend="ESA_WorldCover")
 m.to_streamlit(height=700)
