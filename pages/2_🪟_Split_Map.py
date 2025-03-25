@@ -20,7 +20,7 @@ with st.expander("See source code"):
     with st.echo():
         m = leafmap.Map(center=[52.5, 7.5], zoom=4) 
         m.split_map(
-            left_layer="NASAGIBS.ViirsEarthAtNight2012", right_layer="ESA WorldCover 2012"
+            left_layer="NASAGIBS.ViirsEarthAtNight2012", right_layer="ESA WorldCover 2020"
         )
         m.add_legend(title="ESA Land Cover", builtin_legend="ESA_WorldCover")
 
