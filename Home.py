@@ -1,6 +1,5 @@
 import streamlit as st
 import leafmap.foliumap as leafmap
-import leafmap
 
 st.set_page_config(layout="wide")
 
@@ -36,17 +35,6 @@ markdown = """
 
 st.markdown(markdown)
 
-# NASA Black Marble (VIIRS) for a given date
-date = "2022-01-01"
-url = (
-    f"https://gibs.earthdata.nasa.gov/wmts/epsg3857/best/"
-    f"VIIRS_Black_Marble/default/{date}/GoogleMapsCompatible_Level8/{{z}}/{{y}}/{{x}}.jpg"
-)
-m.add_tile_layer(
-    url=url,
-    name="NASA Black Marble",
-    attribution="NASA GIBS / VIIRS",
-    opacity=1.0
-)
-
+m = leafmap.Map(minimap_control=True)
+m.add_basemap("CartoDB.DarkMatter")
 m.to_streamlit(height=500)
