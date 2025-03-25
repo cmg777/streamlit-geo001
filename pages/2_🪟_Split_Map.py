@@ -15,11 +15,14 @@ st.sidebar.image(logo)
 
 st.title("Split-panel Map")
 
+url1 = "https://github.com/quarcs-lab/datasets/releases/download/DMSP-like/Harmonized_DN_NTL_1992_calDMSP.tif"
+url2 = "https://github.com/quarcs-lab/datasets/releases/download/DMSP-like/Harmonized_DN_NTL_2020_simVIIRS.tif"
+
 with st.expander("See source code"):
     with st.echo():
         m = leafmap.Map()
         m.split_map(
-            left_layer="ESA WorldCover 2020 S2 FCC", right_layer="ESA WorldCover 2020"
+            left_layer=url2, right_layer="ESA WorldCover 2020"
         )
         m.add_legend(title="ESA Land Cover", builtin_legend="ESA_WorldCover")
 
