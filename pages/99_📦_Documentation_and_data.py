@@ -263,41 +263,6 @@ try:
     except Exception as e:
         st.warning(f"Could not create Data Definitions CSV: {str(e)}")
     
-    # Display data info
-    st.header("Dataset Information")
-    
-    # Info about municipal data
-    with st.expander("About the Municipal Dataset"):
-        num_municipalities = len(gdf)
-        num_columns = len(gdf.columns) - 1  # Subtracting the geometry column
-        
-        # Get Stata file size if available
-        stata_size_info = ""
-        if os.path.exists(STATA_PATH):
-            stata_size = os.path.getsize(STATA_PATH) / 1024  # Size in KB
-            stata_size_info = f", {stata_size:.1f} KB (Stata)"
-            
-        st.markdown(f"""
-        ### Municipal Dataset
-        
-        - **Number of Municipalities**: {num_municipalities}
-        - **Number of Variables**: {num_columns}
-        - **File Size**: Approximately {len(geojson_data)/1024:.1f} KB (GeoJSON), {len(csv_data)/1024:.1f} KB (CSV){stata_size_info}
-        
-        This dataset contains various indicators and metrics for municipalities, including geographic boundaries.
-        """)
-    
-    # Info about definitions data
-    with st.expander("About the Data Definitions"):
-        num_definitions = len(definitions)
-        st.markdown(f"""
-        ### Data Definitions
-        
-        - **Number of Variables Defined**: {num_definitions}
-        - **File Size**: Approximately {len(definitions_csv)/1024:.1f} KB
-        
-        This file contains descriptions of the variables found in the municipal dataset.
-        """)
     
     # Display data samples
     with st.expander("Preview Municipal Data"):
