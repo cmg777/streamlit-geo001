@@ -89,6 +89,14 @@ selected_trendline = st.sidebar.selectbox(
     index=1  # Default to OLS
 )
 
+# Trendline scope options
+trendline_scope_options = ['Overall', 'Per Department']
+selected_scope = st.sidebar.selectbox(
+    "Select trendline scope:",
+    options=trendline_scope_options,
+    index=0  # Default to Overall
+)
+
 # Map the trendline option to the appropriate value for px.scatter
 trendline_map = {
     'None': None,
@@ -96,6 +104,9 @@ trendline_map = {
     'Lowess': 'lowess'
 }
 trendline = trendline_map[selected_trendline]
+
+# Map the scope option
+trendline_scope = 'overall' if selected_scope == 'Overall' else 'trace'
 
 # Verify that required columns exist
 required_cols = [ADM1, ADM3, selected_x_col, selected_y_col, selected_hover_col]
@@ -125,7 +136,8 @@ fig = px.scatter(
     symbol=ADM1,                     # Symbol coding by department
     hover_name=ADM3,                 # Municipality for hover tooltip
     trendline=trendline,             # Adding trendline (OLS by default)
-    trendline_scope='overall',       # Scope of the trendline
+    trendline_scope=trendline_scope, # Scope of the trendline (overall or per department)
+    trendline_color_override="red" if trendline_scope == "overall" else None,  # Override color for overall trendline
     hover_data=[selected_hover_col], # Additional data for hover tooltip
     labels=data_dict                 # Custom labels
 )
@@ -146,6 +158,7 @@ Scatter Plot Configuration:
 - Y-axis: {selected_y_label}
 - Additional hover data: {selected_hover_label}
 - Trendline: {selected_trendline}
+- Trendline scope: {selected_scope}
 """)
 
 # Add description of the visualization
@@ -156,36 +169,89 @@ This scatter plot shows the relationship between {selected_x_label} and {selecte
 
 - **Position**: X-axis shows {selected_x_label}, Y-axis shows {selected_y_label}
 - **Color and Symbol**: Different departments are represented by unique colors and symbols
-- **Trendline**: {selected_trendline if selected_trendline != 'None' else 'No'} regression line showing the overall relationship
+- **Trendline**: {selected_trendline if selected_trendline != 'None' else 'No'} regression line {'for each department' if selected_scope == 'Per Department' else 'showing the overall relationship'}
 - **Hover**: Shows municipality name and {selected_hover_label}
 
 This visualization helps identify patterns, correlations, and potential outliers in the data.
 """)
 
-# Simple calculation of R-squared for OLS trendline
+# Calculate and display regression statistics for OLS trendline
 if trendline == 'ols':
     try:
-        # Check that we have sufficient non-null data for analysis
-        valid_data = data[[selected_x_col, selected_y_col]].dropna()
+        # Import here to avoid issues if package is not available
+        import numpy as np
+        from scipy import stats
+        import pandas as pd
         
-        if len(valid_data) > 2:  # Need at least 3 points for meaningful regression
-            # Import here to avoid issues if package is not available
-            import numpy as np
-            from scipy import stats
+        if trendline_scope == 'overall':
+            # Overall regression statistics
+            valid_data = data[[selected_x_col, selected_y_col]].dropna()
             
-            x = valid_data[selected_x_col].values
-            y = valid_data[selected_y_col].values
+            if len(valid_data) > 2:  # Need at least 3 points for meaningful regression
+                x = valid_data[selected_x_col].values
+                y = valid_data[selected_y_col].values
+                
+                # Calculate linear regression
+                slope, intercept, r_value, p_value, std_err = stats.linregress(x, y)
+                
+                # Display overall statistics
+                st.markdown(f"""
+                ### Overall Regression Statistics
+                
+                - **R-squared**: {r_value**2:.4f}
+                - **P-value**: {p_value:.4f}
+                - **Formula**: {selected_y_label} = {slope:.4f} × {selected_x_label} + {intercept:.4f}
+                """)
+        else:
+            # Per-department regression statistics
+            st.markdown("### Regression Statistics by Department")
             
-            # Calculate linear regression
-            slope, intercept, r_value, p_value, std_err = stats.linregress(x, y)
+            # Create a container for the statistics
+            stat_cols = st.columns(3)
             
-            # Display statistics
-            st.markdown(f"""
-            ### Regression Statistics
+            # Get unique departments
+            departments = data[ADM1].unique()
             
-            - **R-squared**: {r_value**2:.4f}
-            - **P-value**: {p_value:.4f}
-            - **Formula**: {selected_y_label} = {slope:.4f} × {selected_x_label} + {intercept:.4f}
-            """)
+            # Calculate and display statistics for each department
+            stats_data = []
+            
+            for dept in departments:
+                dept_data = data[data[ADM1] == dept][[ADM1, selected_x_col, selected_y_col]].dropna()
+                
+                if len(dept_data) > 2:  # Need at least 3 points for meaningful regression
+                    x = dept_data[selected_x_col].values
+                    y = dept_data[selected_y_col].values
+                    
+                    # Calculate linear regression
+                    slope, intercept, r_value, p_value, std_err = stats.linregress(x, y)
+                    
+                    # Store the statistics
+                    stats_data.append({
+                        'Department': dept,
+                        'R-squared': r_value**2,
+                        'P-value': p_value,
+                        'Slope': slope,
+                        'Intercept': intercept
+                    })
+            
+            if stats_data:
+                # Convert to DataFrame for display
+                stats_df = pd.DataFrame(stats_data)
+                
+                # Sort by R-squared for better overview
+                stats_df = stats_df.sort_values('R-squared', ascending=False)
+                
+                # Display as a table
+                st.dataframe(
+                    stats_df.style.format({
+                        'R-squared': '{:.4f}',
+                        'P-value': '{:.4f}',
+                        'Slope': '{:.4f}',
+                        'Intercept': '{:.4f}'
+                    }),
+                    use_container_width=True
+                )
+            else:
+                st.info("Insufficient data to calculate per-department statistics.")
     except Exception as e:
         st.warning(f"Could not calculate regression statistics. Error: {str(e)}")
