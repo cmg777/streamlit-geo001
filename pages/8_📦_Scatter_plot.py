@@ -7,7 +7,8 @@ import os
 # --- Constants ---
 DATA_PATH = "map_and_data.geojson"
 DEFINITIONS_PATH = 'dataDefinitions.csv'
-DEFAULT_VAR_NAME = "imds"
+DEFAULT_X_VAR = "ln_NTLpc2012"
+DEFAULT_Y_VAR = "imds"
 
 # --- Page Config ---
 st.set_page_config(layout="wide", page_title="Geo Viz")
@@ -38,48 +39,58 @@ def load_labels(path):
     return labels
 
 # --- Main App ---
-st.title("Geographic Data Visualization")
+st.title("Municipal Data Visualization")
 
-data   = load_geo_data(DATA_PATH)
+data = load_geo_data(DATA_PATH)
 labels = load_labels(DEFINITIONS_PATH)
 
 numeric_cols = data.select_dtypes(include=['number']).columns.tolist()
 var_options = [(col, labels.get(col, col)) for col in numeric_cols]
 
-# Find default index (case-insensitive)
-default_idx = next((i for i, (col, _) in enumerate(var_options) if col.lower() == DEFAULT_VAR_NAME.lower()), 0)
+# Find default indices (case-insensitive)
+default_x_idx = next((i for i, (col, _) in enumerate(var_options) if col.lower() == DEFAULT_X_VAR.lower()), 0)
+default_y_idx = next((i for i, (col, _) in enumerate(var_options) if col.lower() == DEFAULT_Y_VAR.lower()), 0)
 
-# Sidebar Selector
-selected_idx = st.sidebar.selectbox(
-    "Select variable:",
+# Sidebar Selectors
+st.sidebar.header("Variables")
+
+selected_x_idx = st.sidebar.selectbox(
+    "Select X-axis variable:",
     options=range(len(var_options)),
     format_func=lambda i: var_options[i][1], # Display labels
-    index=default_idx
+    index=default_x_idx
 )
-selected_col, selected_label = var_options[selected_idx]
+selected_x_col, selected_x_label = var_options[selected_x_idx]
 
-# --- Create Map ---
-st.subheader(f"Map of: {selected_label}")
+selected_y_idx = st.sidebar.selectbox(
+    "Select Y-axis variable:",
+    options=range(len(var_options)),
+    format_func=lambda i: var_options[i][1], # Display labels
+    index=default_y_idx
+)
+selected_y_col, selected_y_label = var_options[selected_y_idx]
 
-# Calculate center (optional, Plotly often auto-centers well)
-bounds = data.total_bounds
-center = {"lat": (bounds[1] + bounds[3]) / 2, "lon": (bounds[0] + bounds[2]) / 2}
+# --- Create Scatterplot ---
+st.subheader(f"{selected_y_label} vs {selected_x_label}")
 
-fig = px.choropleth_mapbox(
+fig = px.scatter(
     data,
-    geojson=data.geometry, # Directly use geometry
-    locations="id",
-    color=selected_col,
+    x=selected_x_col,
+    y=selected_y_col,
     hover_name="mun", # Assumes 'mun' column exists
-    color_continuous_scale="Viridis",
-    mapbox_style="carto-positron",
-    zoom=4.5,
-    center=center,
-    opacity=0.7,
-    labels={selected_col: selected_label} # Nicer label in legend/tooltip
+    labels={
+        selected_x_col: selected_x_label,
+        selected_y_col: selected_y_label
+    }
 )
 
-fig.update_layout(margin={"r":0, "t":30, "l":0, "b":0}, height=600)
+fig.update_layout(
+    xaxis_title=selected_x_label,
+    yaxis_title=selected_y_label,
+    height=600,
+    margin={"r":0, "t":30, "l":0, "b":0}
+)
+
 st.plotly_chart(fig, use_container_width=True)
 
-st.sidebar.info(f"Displaying: {selected_label} (`{selected_col}`)")
+st.sidebar.info(f"Comparing: {selected_y_label} (`{selected_y_col}`) vs {selected_x_label} (`{selected_x_col}`)")
