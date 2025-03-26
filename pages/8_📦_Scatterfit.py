@@ -8,7 +8,7 @@ import os
 # --- Constants ---
 DATA_PATH = "map_and_data.geojson"
 DEFINITIONS_PATH = 'dataDefinitions.csv'
-DEFAULT_X_VAR = "ln_NTLpc2012"
+DEFAULT_X_VAR = "ln_t400NTLpc2012"
 DEFAULT_Y_VAR = "imds"
 
 # --- Page Config ---
