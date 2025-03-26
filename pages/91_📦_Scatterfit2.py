@@ -162,32 +162,30 @@ This scatter plot shows the relationship between {selected_x_label} and {selecte
 This visualization helps identify patterns, correlations, and potential outliers in the data.
 """)
 
-# If OLS trendline is selected, show R-squared value
+# Simple calculation of R-squared for OLS trendline
 if trendline == 'ols':
-    import statsmodels.api as sm
-    from statsmodels.formula.api import ols
-    
-    # Check that we have sufficient non-null data
-    valid_data = data[[selected_x_col, selected_y_col]].dropna()
-    if len(valid_data) > 2:  # Need at least 3 points for meaningful regression
-        try:
-            # Create a temporary DataFrame for the regression
-            temp_df = pd.DataFrame({
-                'x': valid_data[selected_x_col],
-                'y': valid_data[selected_y_col]
-            })
+    try:
+        # Check that we have sufficient non-null data for analysis
+        valid_data = data[[selected_x_col, selected_y_col]].dropna()
+        
+        if len(valid_data) > 2:  # Need at least 3 points for meaningful regression
+            # Import here to avoid issues if package is not available
+            import numpy as np
+            from scipy import stats
             
-            # Run OLS regression
-            model = ols('y ~ x', data=temp_df).fit()
+            x = valid_data[selected_x_col].values
+            y = valid_data[selected_y_col].values
+            
+            # Calculate linear regression
+            slope, intercept, r_value, p_value, std_err = stats.linregress(x, y)
             
             # Display statistics
             st.markdown(f"""
             ### Regression Statistics
             
-            - **R-squared**: {model.rsquared:.4f}
-            - **Adjusted R-squared**: {model.rsquared_adj:.4f}
-            - **P-value**: {model.f_pvalue:.4f}
-            - **Formula**: {selected_y_label} = {model.params[1]:.4f} × {selected_x_label} + {model.params[0]:.4f}
+            - **R-squared**: {r_value**2:.4f}
+            - **P-value**: {p_value:.4f}
+            - **Formula**: {selected_y_label} = {slope:.4f} × {selected_x_label} + {intercept:.4f}
             """)
-        except Exception as e:
-            st.warning(f"Could not calculate regression statistics: {e}")s
+    except Exception as e:
+        st.warning(f"Could not calculate regression statistics. Error: {str(e)}")
