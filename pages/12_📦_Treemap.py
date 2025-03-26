@@ -109,7 +109,8 @@ fig = px.treemap(
     path=[ADM1, ADM3],                     # Path for hierarchical display (department -> municipality)
     hover_name=ADM3,                       # Municipality name for hover tooltip
     hover_data=[selected_hover_col],       # Additional data for hover tooltip
-    labels=data_dict                       # Custom labels
+    labels=data_dict,                      # Custom labels
+    color_continuous_scale="viridis"       # Use viridis color scale
 )
 
 fig.update_layout(
