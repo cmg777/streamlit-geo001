@@ -101,7 +101,7 @@ fig = px.box(
 )
 
 fig.update_layout(
-    height=600,
+    height=700,
     margin={"r": 0, "t": 30, "l": 0, "b": 0},
     boxmode='group'                 # Group boxes together
 )
