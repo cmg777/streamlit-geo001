@@ -20,6 +20,10 @@ st.title("Streamlit for Geospatial Applications")
 st.markdown(
     """
     This multipage app template demonstrates various interactive web apps created using [streamlit](https://streamlit.io) and [leafmap](https://leafmap.org). It is an open-source project and you are very welcome to contribute to the [GitHub repository](https://github.com/opengeos/streamlit-map-template).
+
+    1. For the [GitHub repository](https://github.com/cmg777/streamlit-geo001/) 
+    2. For the [Steamlit app](https://quarcs-geo001.streamlit.app/)
+
     """
 )
 
@@ -33,14 +37,6 @@ markdown = """
 
 """
 
-st.header("Access")
-
-markdown = """
-1. For the [GitHub repository](https://github.com/cmg777/streamlit-geo001/) 
-2. For the [Steamlit app](https://quarcs-geo001.streamlit.app/)
-
-
-"""
 
 
 st.markdown(markdown)
