@@ -20,10 +20,6 @@ st.title("Streamlit for Geospatial Applications")
 st.markdown(
     """
     This multipage app template demonstrates various interactive web apps created using [streamlit](https://streamlit.io) and [leafmap](https://leafmap.org). It is an open-source project and you are very welcome to contribute to the [GitHub repository](https://github.com/opengeos/streamlit-map-template).
-
-    1. For the [GitHub repository](https://github.com/cmg777/streamlit-geo001/) 
-    2. For the [Steamlit app](https://quarcs-geo001.streamlit.app/)
-
     """
 )
 
@@ -34,6 +30,9 @@ markdown = """
 2. Customize the sidebar by changing the sidebar text and logo in each Python files.
 3. Findemojis from https://emojipedia.org.
 4. Add a new app to the `pages/` directory with an emoji in the file name, e.g., `1_🚀_Chart.py`.
+1. For the [GitHub repository](https://github.com/cmg777/streamlit-geo001/) 
+2. For the [Steamlit app](https://quarcs-geo001.streamlit.app/)
+
 
 """
 
