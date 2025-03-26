@@ -81,7 +81,9 @@ fig = px.scatter(
     labels={
         selected_x_col: selected_x_label,
         selected_y_col: selected_y_label
-    }
+    },
+    trendline="ols", # Add Ordinary Least Squares regression line
+    trendline_color_override="red"
 )
 
 fig.update_layout(
