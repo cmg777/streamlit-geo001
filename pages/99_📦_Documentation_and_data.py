@@ -47,7 +47,6 @@ def show_project_info():
 
         """)
     
-
     
     with st.expander("📚 Data Sources and Credits"):
         st.markdown("""
@@ -67,7 +66,7 @@ def show_project_info():
         - **Original website**: [atlas.sdsnbolivia.org](http://atlas.sdsnbolivia.org)  
         - **Original Publication**: [sdsnbolivia.org/Atlas](http://www.sdsnbolivia.org/Atlas)  
         - **Source Code of the Web App**: [github.com/cmg777/streamlit-geo001](https://github.com/cmg777/streamlit-geo001)  
-        - **Computational Notebook**: [Google Colab](https://colab.research.google.com/drive/1JHf8wPxSxBdKKhXaKQZUzhEpVznKGiep?usp=sharing)
+        - **Computational Notebook**: [Google Colab](https://colab.research.google.com/github/quarcs-lab/project2021o-notebook/blob/main/notebookColab.ipynb)
         """)
     
     with st.expander("🗃️ Indicators by Sustainable Development Goal"):
@@ -155,22 +154,6 @@ def show_project_info():
 
 # --- Main App ---
 st.title("Documentation and Data")
-
-# Project introduction
-st.markdown("""
-## Regional Development Indicators of Bolivia: A Dashboard for Exploratory Analysis
-
-This project provides comprehensive data on sustainable development indicators at the municipal level in Bolivia. 
-The dataset integrates 62 indicators across 15 Sustainable Development Goals for all 339 Bolivian municipalities, 
-enabling detailed spatial analysis of development patterns and disparities.
-
-The Municipal Sustainable Development Index (IMDS) reveals significant intra-national inequalities in Bolivia, 
-with development levels varying dramatically between municipalities despite national-level progress. This dashboard 
-allows researchers, policymakers, and citizens to explore these patterns through interactive visualizations and 
-download the underlying data for further analysis.
-""")
-
-st.markdown("This page provides information about the project and allows you to download the municipal datasets in various formats.")
 
 # Show project information
 show_project_info()
