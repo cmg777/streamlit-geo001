@@ -7,6 +7,7 @@ import os
 # --- Constants ---
 DATA_PATH = "map_and_data.geojson"
 DEFINITIONS_PATH = 'dataDefinitions.csv'
+STATA_PATH = 'dataStata.dta'
 
 # --- Page Config ---
 st.set_page_config(layout="wide", page_title="Data Download")
@@ -45,6 +46,7 @@ try:
     
     # Prepare data for different formats
     # GeoJSON
+    # Option 1: Generate on the fly
     geojson_buffer = io.BytesIO()
     gdf.to_file(geojson_buffer, driver='GeoJSON')
     geojson_data = geojson_buffer.getvalue()
@@ -82,28 +84,26 @@ try:
         except Exception as e:
             st.warning(f"Could not create CSV format: {str(e)}")
     
-    # Stata download
+    # Stata download from existing file
     with col3:
         try:
-            # Check if we can do Stata export
-            if not hasattr(pd.DataFrame, 'to_stata'):
-                raise ImportError("Pandas installation does not support Stata export. Install pyreadstat package.")
-                
-            # Convert GeoJSON to DataFrame without geometry for Stata compatibility
-            stata_buffer = io.BytesIO()
-            gdf_csv.to_stata(stata_buffer, write_index=False)
-            stata_data = stata_buffer.getvalue()
-            st.download_button(
-                label="Download Stata (.dta)",
-                data=stata_data,
-                file_name="municipal_data.dta",
-                mime="application/octet-stream",  # More generic MIME type for .dta files
-                help="Download the dataset without geographic information in Stata format",
-            )
-        except ImportError as ie:
-            st.info(f"Stata download not available: {str(ie)}")
+            # Check if Stata file exists
+            if not os.path.exists(STATA_PATH):
+                st.warning(f"Stata file not found: {STATA_PATH}")
+            else:
+                # Read the existing Stata file
+                with open(STATA_PATH, 'rb') as f:
+                    stata_data = f.read()
+                    
+                st.download_button(
+                    label="Download Stata (.dta)",
+                    data=stata_data,
+                    file_name="municipal_data.dta",
+                    mime="application/octet-stream",  # Generic MIME type for .dta files
+                    help="Download the dataset in Stata format",
+                )
         except Exception as e:
-            st.warning(f"Could not create Stata format: {str(e)}")
+            st.warning(f"Could not load Stata file: {str(e)}")
     
     # Section for downloading definitions
     st.header("Download Data Definitions")
@@ -128,12 +128,18 @@ try:
     with st.expander("About the Municipal Dataset"):
         num_municipalities = len(gdf)
         num_columns = len(gdf.columns) - 1  # Subtracting the geometry column
+        # Get Stata file size if available
+        stata_size_info = ""
+        if os.path.exists(STATA_PATH):
+            stata_size = os.path.getsize(STATA_PATH) / 1024  # Size in KB
+            stata_size_info = f", {stata_size:.1f} KB (Stata)"
+            
         st.markdown(f"""
         ### Municipal Dataset
         
         - **Number of Municipalities**: {num_municipalities}
         - **Number of Variables**: {num_columns}
-        - **File Size**: Approximately {len(geojson_data)/1024:.1f} KB (GeoJSON), {len(csv_data)/1024:.1f} KB (CSV)
+        - **File Size**: Approximately {len(geojson_data)/1024:.1f} KB (GeoJSON), {len(csv_data)/1024:.1f} KB (CSV){stata_size_info}
         
         This dataset contains various indicators and metrics for municipalities, including geographic boundaries.
         """)
