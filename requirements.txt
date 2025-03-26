@@ -5,3 +5,4 @@ owslib
 streamlit
 geopandas
 plotly
+statsmodels
