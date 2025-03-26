@@ -179,7 +179,7 @@ def show_project_info():
             """)
 
 # --- Main App ---
-st.title("Municipal Data Download")
+st.title("Documentation and Data")
 
 # Project introduction
 st.markdown("""
