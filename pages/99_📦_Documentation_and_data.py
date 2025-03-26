@@ -37,34 +37,17 @@ def show_project_info():
         st.markdown("""
         Adopted in 2015, the **2030 Agenda for Sustainable Development** established 17 Sustainable Development Goals. 
         While global metrics offer useful benchmarks, they often overlook subnational disparities—particularly in 
-        heterogeneous countries like Bolivia.
-        
-        - 🇧🇴 Bolivia ranks **79/166** on the 2020 SDG Index (score: 69.3)
-        - 🏘️ The *Atlas* reveals **intra-national disparities** comparable to **global inter-country variation**
-        """)
-    
-    with st.expander("📊 Municipal Sustainable Development Index (IMDS)"):
-        st.markdown("""
-        The **Municipal Sustainable Development Index (IMDS)** summarizes municipal performance using 62 indicators 
+        heterogeneous countries like Bolivia. The **Municipal Sustainable Development Index (IMDS)** summarizes municipal performance using 62 indicators 
         across 15 Sustainable Development Goals. Systematic and reliable information on goals 12 and 14 are not 
         available at municipal level.
         
-        ### 🎯 Methodological Criteria
-        
-        - ✅ Relevance to local Sustainable Development Goal targets
         - 📥 Data availability from official or trusted sources
         - 🌐 Full municipal coverage (339 municipalities)
         - 🕒 Data mostly from 2012–2019
-        - 🧮 Low redundancy between indicators
+
         """)
     
-    with st.expander("🧩 Technical Highlights"):
-        st.markdown("""
-        - Index scores range from **<40 to >80** (0–100 scale)
-        - Traffic-light visualization: green (goal met), red (critical)
-        - Composite indices for benchmarking municipalities
-        - Interactive map enables issue-specific and regional analysis
-        """)
+
     
     with st.expander("📚 Data Sources and Credits"):
         st.markdown("""
@@ -78,20 +61,12 @@ def show_project_info():
         Mendez, C. (2025, March 24). *Regional Development Indicators of Bolivia: A Dashboard for Exploratory Analysis* (Version 0.0.2) [Computer software]. Zenodo. https://doi.org/10.5281/zenodo.15074864
         """)
     
-    with st.expander("⚠️ Limitations and Future Work"):
-        st.markdown("""
-        - No disaggregated data for Indigenous Territories (TIOC)  
-        - Many indicators based on 2012 Census; updates pending  
-        - Limited information for Goals 12 and 14 at municipal level  
-        - No indicators for educational quality (due to lack of standardized testing)  
-        - Gender violence data unavailable at municipal scale  
-        """)
-    
+
     with st.expander("🔗 Access Links"):
         st.markdown("""
         - **Original website**: [atlas.sdsnbolivia.org](http://atlas.sdsnbolivia.org)  
         - **Original Publication**: [sdsnbolivia.org/Atlas](http://www.sdsnbolivia.org/Atlas)  
-        - **Source Code of the Web App**: [github.com/cmg777/streamlit_esda101](https://github.com/cmg777/streamlit_esda101)  
+        - **Source Code of the Web App**: [github.com/cmg777/streamlit-geo001](https://github.com/cmg777/streamlit-geo001)  
         - **Computational Notebook**: [Google Colab](https://colab.research.google.com/drive/1JHf8wPxSxBdKKhXaKQZUzhEpVznKGiep?usp=sharing)
         """)
     
