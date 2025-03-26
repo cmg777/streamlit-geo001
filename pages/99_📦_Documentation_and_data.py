@@ -29,9 +29,176 @@ def load_definitions(path):
         st.stop()  # Halt execution if data isn't there
     return pd.read_csv(path)
 
+# --- Project Information ---
+def show_project_info():
+    st.header("About the Project")
+    
+    with st.expander("🌐 Context and Motivation", expanded=True):
+        st.markdown("""
+        Adopted in 2015, the **2030 Agenda for Sustainable Development** established 17 Sustainable Development Goals. 
+        While global metrics offer useful benchmarks, they often overlook subnational disparities—particularly in 
+        heterogeneous countries like Bolivia.
+        
+        - 🇧🇴 Bolivia ranks **79/166** on the 2020 SDG Index (score: 69.3)
+        - 🏘️ The *Atlas* reveals **intra-national disparities** comparable to **global inter-country variation**
+        """)
+    
+    with st.expander("📊 Municipal Sustainable Development Index (IMDS)"):
+        st.markdown("""
+        The **Municipal Sustainable Development Index (IMDS)** summarizes municipal performance using 62 indicators 
+        across 15 Sustainable Development Goals. Systematic and reliable information on goals 12 and 14 are not 
+        available at municipal level.
+        
+        ### 🎯 Methodological Criteria
+        
+        - ✅ Relevance to local Sustainable Development Goal targets
+        - 📥 Data availability from official or trusted sources
+        - 🌐 Full municipal coverage (339 municipalities)
+        - 🕒 Data mostly from 2012–2019
+        - 🧮 Low redundancy between indicators
+        """)
+    
+    with st.expander("🧩 Technical Highlights"):
+        st.markdown("""
+        - Index scores range from **<40 to >80** (0–100 scale)
+        - Traffic-light visualization: green (goal met), red (critical)
+        - Composite indices for benchmarking municipalities
+        - Interactive map enables issue-specific and regional analysis
+        """)
+    
+    with st.expander("📚 Data Sources and Credits"):
+        st.markdown("""
+        - Primary data source: [Municipal Atlas of the SDGs in Bolivia 2020.](https://sdsnbolivia.org/Atlas/) 
+        - Additional indicators for multiple years were sourced from the [GeoQuery project.](https://www.aiddata.org/geoquery) 
+        - Administrative boundaries from the [GeoBoundaries database](https://www.geoboundaries.org/)                                                            
+        - Streamlit web app and computational notebook by [Carlos Mendez.](https://carlos-mendez.org)
+        - Erick Gonzales and Pedro Leoni also collaborated in the organization of the data and the creation of the initial geospatial database.
+         
+        **Citation**:  
+        Mendez, C. (2025, March 24). *Regional Development Indicators of Bolivia: A Dashboard for Exploratory Analysis* (Version 0.0.2) [Computer software]. Zenodo. https://doi.org/10.5281/zenodo.15074864
+        """)
+    
+    with st.expander("⚠️ Limitations and Future Work"):
+        st.markdown("""
+        - No disaggregated data for Indigenous Territories (TIOC)  
+        - Many indicators based on 2012 Census; updates pending  
+        - Limited information for Goals 12 and 14 at municipal level  
+        - No indicators for educational quality (due to lack of standardized testing)  
+        - Gender violence data unavailable at municipal scale  
+        """)
+    
+    with st.expander("🔗 Access Links"):
+        st.markdown("""
+        - **Original website**: [atlas.sdsnbolivia.org](http://atlas.sdsnbolivia.org)  
+        - **Original Publication**: [sdsnbolivia.org/Atlas](http://www.sdsnbolivia.org/Atlas)  
+        - **Source Code of the Web App**: [github.com/cmg777/streamlit_esda101](https://github.com/cmg777/streamlit_esda101)  
+        - **Computational Notebook**: [Google Colab](https://colab.research.google.com/drive/1JHf8wPxSxBdKKhXaKQZUzhEpVznKGiep?usp=sharing)
+        """)
+    
+    with st.expander("🗃️ Indicators by Sustainable Development Goal"):
+        col1, col2 = st.columns(2)
+        
+        with col1:
+            st.markdown("""
+            ### 🧱 Goal 1: No Poverty
+            - Energy poverty rate
+            - Multidimensional Poverty Index
+            - Unmet Basic Needs
+            - Access to basic services
+            
+            ### 🌾 Goal 2: Zero Hunger
+            - Chronic malnutrition in children
+            - Obesity prevalence
+            - Agricultural unit size
+            - Tractor density
+            
+            ### 🏥 Goal 3: Good Health
+            - Infant and under-five mortality
+            - Institutional birth coverage
+            - Disease incidence rates
+            - Adolescent fertility rate
+            
+            ### 📚 Goal 4: Quality Education
+            - School dropout rates
+            - Adult literacy rate
+            - Higher education attainment
+            - Qualified teachers
+            
+            ### ⚖️ Goal 5: Gender Equality
+            - Gender parity in education
+            - Labor participation parity
+            - Poverty gender disparities
+            
+            ### 💧 Goal 6: Clean Water
+            - Access to potable water
+            - Access to sanitation
+            - Wastewater treatment
+            
+            ### ⚡ Goal 7: Clean Energy
+            - Electricity coverage
+            - Per capita electricity use
+            - Clean cooking energy
+            """)
+            
+        with col2:
+            st.markdown("""
+            ### 💼 Goal 8: Decent Work
+            - Informality proxies
+            - Labor force participation
+            - Youth NEET rate
+            
+            ### 🏗️ Goal 9: Infrastructure
+            - Internet access
+            - Mobile signal coverage
+            - Urban infrastructure
+            
+            ### ⚖️ Goal 10: Reduced Inequality
+            - Municipal inequality measures
+            
+            ### 🏘️ Goal 11: Sustainable Cities
+            - Urban housing adequacy
+            - Access to transportation
+            
+            ### 🌍 Goal 13: Climate Action
+            - Disaster resilience
+            - CO₂ emissions
+            - Forest degradation
+            
+            ### 🌳 Goal 15: Life on Land
+            - Deforestation rates
+            - Biodiversity loss indicators
+            
+            ### 🕊️ Goal 16: Peace & Justice
+            - Birth registration
+            - Crime and homicide rates
+            - Corruption perceptions
+            
+            ### 🤝 Goal 17: Partnerships
+            - Municipal fiscal capacity
+            - Public investment per capita
+            """)
+
 # --- Main App ---
 st.title("Municipal Data Download")
-st.markdown("This page allows you to download the municipal datasets in various formats.")
+
+# Project introduction
+st.markdown("""
+## Regional Development Indicators of Bolivia: A Dashboard for Exploratory Analysis
+
+This project provides comprehensive data on sustainable development indicators at the municipal level in Bolivia. 
+The dataset integrates 62 indicators across 15 Sustainable Development Goals for all 339 Bolivian municipalities, 
+enabling detailed spatial analysis of development patterns and disparities.
+
+The Municipal Sustainable Development Index (IMDS) reveals significant intra-national inequalities in Bolivia, 
+with development levels varying dramatically between municipalities despite national-level progress. This dashboard 
+allows researchers, policymakers, and citizens to explore these patterns through interactive visualizations and 
+download the underlying data for further analysis.
+""")
+
+st.markdown("This page provides information about the project and allows you to download the municipal datasets in various formats.")
+
+# Show project information
+show_project_info()
 
 # Load the datasets
 try:
@@ -128,6 +295,7 @@ try:
     with st.expander("About the Municipal Dataset"):
         num_municipalities = len(gdf)
         num_columns = len(gdf.columns) - 1  # Subtracting the geometry column
+        
         # Get Stata file size if available
         stata_size_info = ""
         if os.path.exists(STATA_PATH):
