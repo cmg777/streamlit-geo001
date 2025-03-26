@@ -2,7 +2,17 @@ import streamlit as st
 import geopandas as gpd
 import pandas as pd
 import plotly.express as px
+import plotly.graph_objects as go
+from plotly.subplots import make_subplots
+import numpy as np
 import os
+
+# Check if statsmodels is available
+try:
+    import statsmodels.api as sm
+    STATSMODELS_AVAILABLE = True
+except ImportError:
+    STATSMODELS_AVAILABLE = False
 
 # --- Constants ---
 DATA_PATH = "map_and_data.geojson"
@@ -73,6 +83,7 @@ selected_y_col, selected_y_label = var_options[selected_y_idx]
 # --- Create Scatterplot ---
 st.subheader(f"{selected_y_label} vs {selected_x_label}")
 
+# Create basic scatter plot
 fig = px.scatter(
     data,
     x=selected_x_col,
@@ -81,10 +92,36 @@ fig = px.scatter(
     labels={
         selected_x_col: selected_x_label,
         selected_y_col: selected_y_label
-    },
-    trendline="ols", # Add Ordinary Least Squares regression line
-    trendline_color_override="red"
+    }
 )
+
+# Add regression line manually (without requiring statsmodels)
+x_values = data[selected_x_col].dropna().values
+y_values = data[selected_y_col].dropna().values
+
+# Filter out NaN values
+valid_indices = np.logical_and(~np.isnan(x_values), ~np.isnan(y_values))
+x_values = x_values[valid_indices]
+y_values = y_values[valid_indices]
+
+if len(x_values) > 1 and len(y_values) > 1:
+    # Calculate regression line using numpy's polyfit
+    slope, intercept = np.polyfit(x_values, y_values, 1)
+    
+    # Create x values for the line
+    x_line = np.array([min(x_values), max(x_values)])
+    y_line = slope * x_line + intercept
+    
+    # Add regression line to plot
+    fig.add_trace(
+        go.Scatter(
+            x=x_line,
+            y=y_line,
+            mode='lines',
+            name=f'y = {slope:.3f}x + {intercept:.3f}',
+            line=dict(color='red', width=2)
+        )
+    )
 
 fig.update_layout(
     xaxis_title=selected_x_label,
