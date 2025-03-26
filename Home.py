@@ -33,6 +33,16 @@ markdown = """
 
 """
 
+st.header("Access")
+
+markdown = """
+1. For the [GitHub repository](https://github.com/cmg777/streamlit-geo001/) 
+2. For the [Steamlit app](https://quarcs-geo001.streamlit.app/)
+
+
+"""
+
+
 st.markdown(markdown)
 
 m = leafmap.Map(minimap_control=True)

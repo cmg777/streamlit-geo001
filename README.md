@@ -11,6 +11,12 @@ Web App URL: <https://quarcs-geo001.streamlit.app>
 3. Find your favorite emoji from https://emojipedia.org.
 4. Add a new app to the `pages/` directory with an emoji in the file name, e.g., 1_🚀_Chart.py.
 
+## Access
+
+1. For the [GitHub repository](https://github.com/cmg777/streamlit-geo001/) 
+2. For the [Steamlit app](https://quarcs-geo001.streamlit.app/)
+
+
 ## Demo
 
 ![](https://i.imgur.com/6lj0oAO.png)
